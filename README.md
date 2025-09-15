@@ -1,7 +1,11 @@
-# Stopwatch Web App
 
-## Description
-A simple and interactive stopwatch built with HTML, CSS, and JavaScript. Features include **start**, **stop**, **reset**, and **lap** functionality. Perfect for learning **DOM manipulation**, **event handling**, and real-time **timer updates** in JavaScript.
+  # Interactive Navigation Menu
 
-### Tags
-#JavaScript #WebDevelopment #HTML #CSS #Stopwatch #Frontend
+  This is a code bundle for Interactive Navigation Menu. The original project is available at https://www.figma.com/design/2saY9TdbcBvY1IfNVPSZyT/Interactive-Navigation-Menu.
+
+  ## Running the code
+
+  Run `npm i` to install the dependencies.
+
+  Run `npm run dev` to start the development server.
+  
