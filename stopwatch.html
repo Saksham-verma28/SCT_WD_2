@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0b0b0b;
+      margin: 0;
+      padding: 0;
+      color: #d4af37; /* gold */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 25px;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #d4af37;
+    }
+
+    .card {
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+      max-width: 600px;
+      width: 90%;
+    }
+
+    .stopwatch {
+      font-size: 4rem;
+      font-weight: bold;
+      margin-bottom: 25px;
+      letter-spacing: 4px;
+      color: #f0d878;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .controls button {
+      background: #111;
+      border: 1px solid #d4af37;
+      color: #d4af37;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .controls button:hover {
+      background: #d4af37;
+      color: #0b0b0b;
+    }
+
+    .laps {
+      margin-top: 20px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: rgba(212, 175, 55, 0.05);
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.85rem;
+      color: rgba(212, 175, 55, 0.6);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d4af37;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+  <header>⏱ Stopwatch</header>
+
+  <div class="card">
+    <div class="stopwatch" id="display">00:00:00</div>
+
+    <div class="controls">
+      <button onclick="start()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+      <button onclick="lap()">Lap</button>
+    </div>
+
+    <div class="laps">
+      <table id="lapTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Lap Time</th>
+            <th>Since Last</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>© 2025 Stopwatch | Black & Gold Edition</footer>
+
+  <script>
+    let timer;
+    let isRunning = false;
+    let startTime;
+    let elapsedTime = 0;
+    let lastLapTime = 0;
+
+    const display = document.getElementById("display");
+    const lapTable = document.querySelector("#lapTable tbody");
+
+    function timeToString(time) {
+      let hrs = Math.floor(time / 3600000);
+      let mins = Math.floor((time % 3600000) / 60000);
+      let secs = Math.floor((time % 60000) / 1000);
+
+      let h = hrs.toString().padStart(2, "0");
+      let m = mins.toString().padStart(2, "0");
+      let s = secs.toString().padStart(2, "0");
+
+      return `${h}:${m}:${s}`;
+    }
+
+    function start() {
+      if (!isRunning) {
+        isRunning = true;
+        startTime = Date.now() - elapsedTime;
+        timer = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          display.textContent = timeToString(elapsedTime);
+        }, 1000);
+      }
+    }
+
+    function pause() {
+      if (isRunning) {
+        clearInterval(timer);
+        isRunning = false;
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      isRunning = false;
+      elapsedTime = 0;
+      lastLapTime = 0;
+      display.textContent = "00:00:00";
+      lapTable.innerHTML = "";
+    }
+
+    function lap() {
+      if (isRunning) {
+        let lapTime = elapsedTime - lastLapTime;
+        let totalTime = elapsedTime;
+        lastLapTime = elapsedTime;
+
+        let row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${lapTable.children.length + 1}</td>
+          <td>${timeToString(lapTime)}</td>
+          <td>${lapTable.children.length === 0 ? "-" : timeToString(lapTime)}</td>
+          <td>${timeToString(totalTime)}</td>
+        `;
+        lapTable.appendChild(row);
+      }
+    }
+  </script>
+</body>
+</html>
